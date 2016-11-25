@@ -1,9 +1,25 @@
-"""
-A simple item-based recommender system.
-"""
+"""A simple item-based recommender system."""
+from os.path import join, dirname
 from setuptools import find_packages, setup
 
-dependencies = ['click']
+
+def get_requirements(filename):
+    """
+    Retrieve dependencies from file.
+
+    Args:
+        filename (str): name of the requirements file.
+    Returns:
+        list: list of packages.
+    """
+    try:
+        return open(
+            join(dirname(__file__), filename)
+        ).read().splitlines()
+    except IOError:
+        return []
+
+dependencies = get_requirements('requirements.txt')
 
 setup(
     name='movierecommender',

@@ -8,3 +8,7 @@ def main(name, as_cowboy):
     """A simple item-based recommender system."""
     greet = 'Howdy' if as_cowboy else 'Hello'
     click.echo('{0}, {1}.'.format(greet, name))
+
+
+if __name__ == '__main__':
+    main()
