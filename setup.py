@@ -13,9 +13,7 @@ def get_requirements(filename):
         list: list of packages.
     """
     try:
-        return open(
-            join(dirname(__file__), filename)
-        ).read().splitlines()
+        return open(join(dirname(__file__), filename)).read().splitlines()
     except IOError:
         return []
 
@@ -37,7 +35,7 @@ setup(
     install_requires=dependencies,
     entry_points={
         'console_scripts': [
-            'movie-recommender = movie_recommender.cli:main',
+            'movie-recommender = movie_recommender.cli:main'
         ],
     },
     classifiers=[
@@ -59,6 +57,6 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
-        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Software Development :: Libraries :: Python Modules'
     ]
 )
