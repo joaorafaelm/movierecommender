@@ -1,4 +1,4 @@
-"""A simple item-based recommender system."""
+"""A simple recommender system."""
 from os.path import join, dirname
 from setuptools import find_packages, setup
 
@@ -26,7 +26,7 @@ setup(
     license='BSD',
     author='Joao Rafael Martins de Oliveira',
     author_email='joaoraf@me.com',
-    description='A simple item-based recommender system.',
+    description='A simple recommender system.',
     long_description=__doc__,
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
