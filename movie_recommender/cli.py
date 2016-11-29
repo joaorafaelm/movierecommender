@@ -1,3 +1,4 @@
+# coding=utf-8
 """Program main file."""
 import click
 import json
@@ -9,7 +10,7 @@ from movie_recommender.recommender import RecommenderEngine, RecommenderModel
 @click.argument('movies', required=True)
 @click.option('--max-recommendations', default=5)
 def main(data, movies, max_recommendations):
-    """A simple item-based recommender system."""
+    """A simple user-based recommender system."""
 
     data = json.load(data)
 
