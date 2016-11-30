@@ -1,3 +1,4 @@
+# coding=utf-8
 """Recommender base classes and methods."""
 
 
@@ -29,7 +30,7 @@ def euclidean_distance(person_1, person_2):
 
 
 class RecommenderModel(object):
-    items = {}
+    _items = {}
 
     def add(self, identifier, items):
         """Add item into list of item.
@@ -37,13 +38,13 @@ class RecommenderModel(object):
             identifier (string): data identifier
             items (list, dict): items with or without ratings.
         """
-        ratings = self.items.get(str(identifier), {})
+        ratings = self._items.get(str(identifier), {})
         if isinstance(items, (list, tuple,)):
             ratings.update({str(i): 1 for i in items})
         elif isinstance(items, dict):
             ratings.update(items.copy())
 
-        self.items.update({
+        self._items.update({
             str(identifier): ratings
         })
 
@@ -54,7 +55,7 @@ class RecommenderModel(object):
         Returns:
             dict: dictionary with item ratings.
         """
-        return self.items.get(identifier)
+        return self._items.get(identifier)
 
     def iteritems(self):
         """
@@ -62,7 +63,7 @@ class RecommenderModel(object):
         This method will use more memory in python 2.x, as it builds a
         temporary list instead of a generator.
         """
-        return self.items.items()
+        return self._items.items()
 
 
 class RecommenderEngine(object):

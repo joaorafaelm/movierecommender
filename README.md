@@ -1,21 +1,37 @@
 # Movie Recommender
 
-A simple item-based recommender system.
+A movie recommender system.
+
+# Development
+
+Run:
+
+    $ pip install -r requirements.txt
+
+Running tests:
+
+    $ tox
 
 
 # Installation
 
-If you don't use `pipsi`, you're missing out.
-Here are [installation instructions](https://github.com/mitsuhiko/pipsi#readme).
+To install it as a package, run:
 
-Simply run:
-
-    $ pipsi install .
+    $ pip install .
 
 
 # Usage
 
 To use it:
 
-    $ movie-recommender --help
+    $ movie-recommender [OPTIONS] <filename> <movies_ids>
+
+filename: JSON file with data. Check tests/sample.json or movies.json.
+
+movies_ids: list of ids separated by comma.
+
+OPTIONS:
+    --max-recommendations=INTEGER (Default: 5)
+    --help
+
 

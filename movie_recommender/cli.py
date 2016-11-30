@@ -35,32 +35,6 @@ def main(data, movies, max_recommendations):
             movie_name=data.get('movies').get(str(movie[1]))
         ))
 
+
 if __name__ == '__main__':
     main()
-    # data = {
-    #     'movies': {
-    #         '1': 'Harry Potter 1',
-    #         '2': 'Harry Potter 2',
-    #         '3': 'Twilight',
-    #         '4': 'Lord of the Rings 1',
-    #         '5': 'SW Episode I'
-    #     },
-    #     'users': [
-    #         {
-    #             'user_id': 1,
-    #             'movies': [1, 2]
-    #         },
-    #         {
-    #             'user_id': 2,
-    #             'movies': [3]
-    #         },
-    #         {
-    #             'user_id': 3,
-    #             'movies': [1, 4, 5]
-    #         },
-    #         {
-    #             'user_id': 4,
-    #             'movies': [5]
-    #         },
-    #     ]
-    # }

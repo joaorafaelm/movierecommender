@@ -1,65 +1,104 @@
 # coding=utf-8
-"""Teste de validação de armazenamento no cache."""
+"""Test Recommender Engine and Model."""
+import pytest
 import unittest
+from movie_recommender.recommender import euclidean_distance
+from movie_recommender.recommender import RecommenderEngine, RecommenderModel
 
-class TestEquipment(unittest.TestCase):
-    """Classe de teste de equipamentos do cache/DB."""
-    _equipment = Equipment()
-    _ir = 3781220677092207
 
-    def test_get_equipment_from_db(self):
-        """Recupera equipamento do banco de dados."""
-        e = self._equipment.get(
-            key_id=self._ir, values={'ir': self._ir}, use_cache=False
-        )
-        self.assertEqual(type(e), dict)
+class TestRecommender(unittest.TestCase):
+    """Recommender test based class"""
 
-    def test_save_and_get_equipment_from_cache(self):
-        """Salva e recupera equipamento do cache."""
-        obj = {'value': 123}
-        cached_obj, expire_obj = self._equipment.save(
-            info=obj, key_id=obj.get('value')
-        )
-        self.assertEqual(cached_obj, True)
-        self.assertEqual(expire_obj, True)
-        e = self._equipment.is_cached(key_id=obj.get('value'))
-        self.assertEqual(e.get('value'), 123)
+    _model = None
+    _data = {
+        'movies': {
+            '1': 'Harry Potter 1',
+            '2': 'Harry Potter 2',
+            '3': 'Twilight',
+            '4': 'Lord of the Rings 1',
+            '5': 'SW Episode I'
+        },
+        'users': [
+            {
+                'user_id': 1,
+                'movies': [1, 2]
+            },
+            {
+                'user_id': 2,
+                'movies': [3]
+            },
+            {
+                'user_id': 3,
+                'movies': [1, 4, 5]
+            },
+            {
+                'user_id': 4,
+                'movies': [5]
+            },
+        ]
+    }
 
-    def test_auto_casting_float(self):
-        """Testa conversão de string para float."""
+    @pytest.mark.first
+    def test_recommender_model(self):
+        """Validate base model."""
+
+        self._model = RecommenderModel()
+        for user in self._data.get('users'):
+            self._model.add(
+                identifier=user.get('user_id'),
+                items=user.get('movies')
+            )
+
+        self.assertEqual(type(self._model), RecommenderModel)
+
+        # validate if data structure is consistent with data
         self.assertEqual(
-            type(self._equipment.cast_value('12.3')), float
-        )
-        self.assertNotEqual(
-            type(self._equipment.cast_value('12,3')), float
+            sorted(list(map(int, list(self._model.get('1'))))),
+            self._data['users'][0]['movies']
         )
 
-    def test_auto_casting_string(self):
-        """Testa se conversão mantem string."""
-        self.assertEqual(
-            type(self._equipment.cast_value('String')), str
-        )
-        self.assertNotEqual(
-            type(self._equipment.cast_value('"123"')), int
+        # validate item insertion
+        self._model.add(identifier='6', items={'1': 5.0})
+        self.assertEqual(self._model.get('6'), {'1': 5.0})
+
+    @pytest.mark.second
+    def test_recommendations_model(self):
+        """Validate recommendations."""
+
+        self._model = RecommenderModel()
+        for user in self._data.get('users'):
+            self._model.add(
+                identifier=user.get('user_id'),
+                items=user.get('movies')
+            )
+
+        max_recommendations = 3
+        result = RecommenderEngine.get_recommendations(
+            self._model, {'1': 1}, k=max_recommendations
         )
 
-    def test_auto_casting_integer(self):
-        """Testa conversão de string para inteiro."""
-        self.assertEqual(
-            type(self._equipment.cast_value('123')), int
-        )
-        self.assertNotEqual(
-            type(self._equipment.cast_value('1"23')), int
+        self.assertLessEqual(len(result), max_recommendations)
+
+        recommended_movies_ids = sorted([x[1] for x in result])
+        self.assertEqual(recommended_movies_ids, ['2', '4', '5'])
+
+    def test_similarity_func(self):
+        """Validate similarity between two users(considering rating values)"""
+
+        # Less similarity
+        self.assertLess(
+            euclidean_distance({'1': 5.0}, {'1': 3.0}),
+            1
         )
 
-    def test_auto_casting_boolean(self):
-        """Testa conversão de string para boolean"""
+        # max similiarity value: 1
         self.assertEqual(
-            type(self._equipment.cast_value('True')), bool
+            euclidean_distance({'1': 5.0}, {'1': 5.0}),
+            1
         )
+
+        # no similiarity
         self.assertEqual(
-            type(self._equipment.cast_value('False')), bool
-        )
-        self.assertNotEqual(
-            type(self._equipment.cast_value('true')), bool
+            euclidean_distance({'1': 5.0}, {'2': 5.0}),
+            0
         )
