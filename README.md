@@ -1,6 +1,6 @@
 # Movie Recommender
 
-A movie recommender system.
+A very simple program that recommends new movies to users based on their liked movies.
 
 # Development
 
